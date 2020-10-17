@@ -1,0 +1,6 @@
+		// database = input + output 
+		// input = create + delete + update
+		// output = read
+    	// 졸여서 CRUD가 중요하다.
+		
+		//file < spreadsheet < database
