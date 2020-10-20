@@ -43,4 +43,346 @@ mysql>  CREATE TABLE topic(
     -> PRIMARY KEY(id));
 Query OK, 0 rows affected (0.03 sec)
 
+
+===================================================================================================
+//2020 - 10 -20;
+
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 4
+Server version: 5.7.31-log MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> USE test;
+Database changed
+mysql> show tables;
++----------------+
+| Tables_in_test |
++----------------+
+| a              |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> INSERT INTO a VALUES('홍길동', 'M', 25);
+ERROR 1366 (HY000): Incorrect string value: '\xC8\xAB\xB1\xE6\xB5\xBF' for column 'NAME' at row 1
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql> INSERT INTO a VALUES('HONG', 'M', 25);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO a VALUES('KIM', 'F', 33);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO a VALUES('KOKO', 'F', 23);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO a VALUES('YOU', 'M', 46);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT * FROM a;
++------+------+------+
+| NAME | SEX  | OLD  |
++------+------+------+
+| HONG | M    |   25 |
+| KIM  | F    |   33 |
+| KOKO | F    |   23 |
+| YOU  | M    |   46 |
++------+------+------+
+4 rows in set (0.00 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| bbs                |
+| mysql              |
+| mysqlstudy         |
+| performance_schema |
+| sakila             |
+| sys                |
+| test               |
+| world              |
++--------------------+
+9 rows in set (0.01 sec)
+
+mysql> use mysqlstudy
+Database changed
+mysql> INSERT INTO topic VALUES('ORACLE', 'ORACLE IS', NOW(), 'egoing', developer);
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> INSERT INTO topic VALUES('ORACLE', 'ORACLE IS', NOW(), 'egoing', 'developer');
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> INSERT INTO topic VALUES('ORACLE', 'ORACLE IS', NOW(), 'egoing', 'developer');
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> select * from topic;
++----+-------+-------------+---------------------+--------+-----------+
+| id | title | description | created             | author | profile   |
++----+-------+-------------+---------------------+--------+-----------+
+|  1 | MYSQL | mySql is... | 2020-10-19 14:26:50 | egoing | develpoer |
++----+-------+-------------+---------------------+--------+-----------+
+1 row in set (0.00 sec)
+
+mysql> INSERT INTO topic VALUES('2','ORACLE', 'ORACLE IS', NOW(), 'egoing', 'developer');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO topic VALUES('3','SQL SERVER', 'SQL SERVER IS', NOW(), 'egoing', 'STUDENT');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO topic VALUES('4','POSTAGRESQL', 'POSTAGRESQL IS', NOW(), 'KIMHONG', 'STUDENT');
+Query OK, 1 row affected (0.00 sec)
+
+mysql>
+mysql> INSERT INTO topic VALUES('5','MONGO DB', 'MONGO DB' IS', NOW(), 'SEEMINGLY', 'STUDENT');
+    '>
+    '> ;
+    '> INSERT INTO topic VALUES('5','MONGO DB', 'MONGO DB' IS', NOW(), 'SEEMINGLY', 'STUDENT');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '', NOW(), 'SEEMINGLY', 'STUDENT');
+
+;
+INSERT INTO topic VALUES('5','MONGO DB', '' at line 1
+mysql> INSERT INTO topic VALUES('6','MONGO DB', 'MONGO DB' IS', NOW(), 'SEEMINGLY', 'STUDENT');
+    '> INSERT INTO topic VALUES('6','MONGO DB', 'MONGO DB' IS', NOW(), 'SEEMINGLY', 'STUDENT');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '', NOW(), 'SEEMINGLY', 'STUDENT');
+INSERT INTO topic VALUES('6','MONGO DB', 'MON' at line 1
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql> UPDATA topic SET 'KIMHONG' = 'KIMKIM';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'UPDATA topic SET 'KIMHONG' = 'KIMKIM'' at line 1
+mysql> UPDATE topic SET 'KIMHONG' = 'KIMKIM';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''KIMHONG' = 'KIMKIM'' at line 1
+mysql> UPDATE topic SET author = 'KIMKIM'; WHERE id =4;
+Query OK, 4 rows affected (0.01 sec)
+Rows matched: 4  Changed: 4  Warnings: 0
+
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE id =4' at line 1
+mysql> rollback
+    -> ;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from topic;
++----+-------------+----------------+---------------------+--------+-----------+
+| id | title       | description    | created             | author | profile   |
++----+-------------+----------------+---------------------+--------+-----------+
+|  1 | MYSQL       | mySql is...    | 2020-10-19 14:26:50 | KIMKIM | develpoer |
+|  2 | ORACLE      | ORACLE IS      | 2020-10-20 12:25:33 | KIMKIM | developer |
+|  3 | SQL SERVER  | SQL SERVER IS  | 2020-10-20 12:26:09 | KIMKIM | STUDENT   |
+|  4 | POSTAGRESQL | POSTAGRESQL IS | 2020-10-20 12:26:48 | KIMKIM | STUDENT   |
++----+-------------+----------------+---------------------+--------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> UPDATE topic  SET autor = 'KING' WHERE id = 1;
+ERROR 1054 (42S22): Unknown column 'autor' in 'field list'
+mysql> UPDATE topic  SET author = 'KING' WHERE id = 1;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> show tables;
++----------------------+
+| Tables_in_mysqlstudy |
++----------------------+
+| topic                |
++----------------------+
+1 row in set (0.00 sec)
+
+mysql> select * from topic
+    -> ;
++----+-------------+----------------+---------------------+--------+-----------+
+| id | title       | description    | created             | author | profile   |
++----+-------------+----------------+---------------------+--------+-----------+
+|  1 | MYSQL       | mySql is...    | 2020-10-19 14:26:50 | KING   | develpoer |
+|  2 | ORACLE      | ORACLE IS      | 2020-10-20 12:25:33 | KIMKIM | developer |
+|  3 | SQL SERVER  | SQL SERVER IS  | 2020-10-20 12:26:09 | KIMKIM | STUDENT   |
+|  4 | POSTAGRESQL | POSTAGRESQL IS | 2020-10-20 12:26:48 | KIMKIM | STUDENT   |
++----+-------------+----------------+---------------------+--------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> DELETE FROM TOPIC WHERE id = 4;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from topic;
++----+------------+---------------+---------------------+--------+-----------+
+| id | title      | description   | created             | author | profile   |
++----+------------+---------------+---------------------+--------+-----------+
+|  1 | MYSQL      | mySql is...   | 2020-10-19 14:26:50 | KING   | develpoer |
+|  2 | ORACLE     | ORACLE IS     | 2020-10-20 12:25:33 | KIMKIM | developer |
+|  3 | SQL SERVER | SQL SERVER IS | 2020-10-20 12:26:09 | KIMKIM | STUDENT   |
++----+------------+---------------+---------------------+--------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> CREATE TABLE `author` (
+    ->   `id` int(11) NOT NULL AUTO_INCREMENT,
+    ->   `name` varchar(20) NOT NULL,
+    ->   `profile` varchar(200) DEFAULT NULL,
+    ->   PRIMARY KEY (`id`)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE `topic` (
+    ->   `id` int(11) NOT NULL AUTO_INCREMENT,
+    ->   `title` varchar(30) NOT NULL,
+    ->   `description` text,
+    ->   `created` datetime NOT NULL,
+    ->   `author_id` int(11) DEFAULT NULL,
+    ->   PRIMARY KEY (`id`)
+    -> );
+ERROR 1050 (42S01): Table 'topic' already exists
+mysql> drop table topic;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE TABLE `topic` (
+    ->   `id` int(11) NOT NULL AUTO_INCREMENT,
+    ->   `title` varchar(30) NOT NULL,
+    ->   `description` text,
+    ->   `created` datetime NOT NULL,
+    ->   `author_id` int(11) DEFAULT NULL,
+    ->   PRIMARY KEY (`id`)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> INSERT INTO `topic` VALUES (1,'MySQL','MySQL is...','2018-01-01 12:10:11',1);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO `topic` VALUES (2,'Oracle','Oracle is ...','2018-01-03 13:01:10',1);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO `topic` VALUES (3,'SQL Server','SQL Server is ...','2018-01-20 11:01:10',2);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO `topic` VALUES (4,'PostgreSQL','PostgreSQL is ...','2018-01-23 01:03:03',3);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO `topic` VALUES (5,'MongoDB','MongoDB is ...','2018-01-30 12:31:03',1);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> show tables;
++----------------------+
+| Tables_in_mysqlstudy |
++----------------------+
+| author               |
+| topic                |
++----------------------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT * FROM TOPIC;
++----+------------+-------------------+---------------------+-----------+
+| id | title      | description       | created             | author_id |
++----+------------+-------------------+---------------------+-----------+
+|  1 | MySQL      | MySQL is...       | 2018-01-01 12:10:11 |         1 |
+|  2 | Oracle     | Oracle is ...     | 2018-01-03 13:01:10 |         1 |
+|  3 | SQL Server | SQL Server is ... | 2018-01-20 11:01:10 |         2 |
+|  4 | PostgreSQL | PostgreSQL is ... | 2018-01-23 01:03:03 |         3 |
+|  5 | MongoDB    | MongoDB is ...    | 2018-01-30 12:31:03 |         1 |
++----+------------+-------------------+---------------------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM TOPIC LEFT JOIN AUTHOR ON TOPIC.AUTHOR_ID = AUTHOR.ID;
++----+------------+-------------------+---------------------+-----------+------+------+---------+
+| id | title      | description       | created             | author_id | id   | name | profile |
++----+------------+-------------------+---------------------+-----------+------+------+---------+
+|  1 | MySQL      | MySQL is...       | 2018-01-01 12:10:11 |         1 | NULL | NULL | NULL    |
+|  2 | Oracle     | Oracle is ...     | 2018-01-03 13:01:10 |         1 | NULL | NULL | NULL    |
+|  3 | SQL Server | SQL Server is ... | 2018-01-20 11:01:10 |         2 | NULL | NULL | NULL    |
+|  4 | PostgreSQL | PostgreSQL is ... | 2018-01-23 01:03:03 |         3 | NULL | NULL | NULL    |
+|  5 | MongoDB    | MongoDB is ...    | 2018-01-30 12:31:03 |         1 | NULL | NULL | NULL    |
++----+------------+-------------------+---------------------+-----------+------+------+---------+
+5 rows in set (0.01 sec)
+
+mysql> SELECT * FROM AHTHOR;
+ERROR 1146 (42S02): Table 'mysqlstudy.ahthor' doesn't exist
+mysql> SELECT * FROM AUTHOR;
+Empty set (0.00 sec)
+
+mysql> INSERT INTO AUTHOR VALUES(1, 'KING', 'TEACHER');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO AUTHOR VALUES(2, 'GOD', 'STUDENT');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO AUTHOR VALUES(3, 'KIMKIM', 'WORKER');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT * FROM TOPIC LEFT JOIN AUTHOR ON TOPIC.AUTHOR_ID = AUTHOR.ID;
++----+------------+-------------------+---------------------+-----------+------+--------+---------+
+| id | title      | description       | created             | author_id | id   | name   | profile |
++----+------------+-------------------+---------------------+-----------+------+--------+---------+
+|  1 | MySQL      | MySQL is...       | 2018-01-01 12:10:11 |         1 |    1 | KING   | TEACHER |
+|  2 | Oracle     | Oracle is ...     | 2018-01-03 13:01:10 |         1 |    1 | KING   | TEACHER |
+|  5 | MongoDB    | MongoDB is ...    | 2018-01-30 12:31:03 |         1 |    1 | KING   | TEACHER |
+|  3 | SQL Server | SQL Server is ... | 2018-01-20 11:01:10 |         2 |    2 | GOD    | STUDENT |
+|  4 | PostgreSQL | PostgreSQL is ... | 2018-01-23 01:03:03 |         3 |    3 | KIMKIM | WORKER  |
++----+------------+-------------------+---------------------+-----------+------+--------+---------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM AUTHOR;
++----+--------+---------+
+| id | name   | profile |
++----+--------+---------+
+|  1 | KING   | TEACHER |
+|  2 | GOD    | STUDENT |
+|  3 | KIMKIM | WORKER  |
++----+--------+---------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT TOPIC.ID, TITLE, DESCRIPTION, CREATED,NAME,PROFILE FROM TOPIC LEFT JOIN AUTHOR ON TOPIC.AUTHOR_ID = AUTHOR.ID;
++----+------------+-------------------+---------------------+--------+---------+
+| ID | TITLE      | DESCRIPTION       | CREATED             | NAME   | PROFILE |
++----+------------+-------------------+---------------------+--------+---------+
+|  1 | MySQL      | MySQL is...       | 2018-01-01 12:10:11 | KING   | TEACHER |
+|  2 | Oracle     | Oracle is ...     | 2018-01-03 13:01:10 | KING   | TEACHER |
+|  5 | MongoDB    | MongoDB is ...    | 2018-01-30 12:31:03 | KING   | TEACHER |
+|  3 | SQL Server | SQL Server is ... | 2018-01-20 11:01:10 | GOD    | STUDENT |
+|  4 | PostgreSQL | PostgreSQL is ... | 2018-01-23 01:03:03 | KIMKIM | WORKER  |
++----+------------+-------------------+---------------------+--------+---------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT TOPIC.ID AS TOPIC_ID, TITLE, DESCRIPTION, CREATED,NAME,PROFILE FROM TOPIC LEFT JOIN AUTHOR ON TOPIC.AUTHOR_ID = AUTHOR.ID;
++----------+------------+-------------------+---------------------+--------+---------+
+| TOPIC_ID | TITLE      | DESCRIPTION       | CREATED             | NAME   | PROFILE |
++----------+------------+-------------------+---------------------+--------+---------+
+|        1 | MySQL      | MySQL is...       | 2018-01-01 12:10:11 | KING   | TEACHER |
+|        2 | Oracle     | Oracle is ...     | 2018-01-03 13:01:10 | KING   | TEACHER |
+|        5 | MongoDB    | MongoDB is ...    | 2018-01-30 12:31:03 | KING   | TEACHER |
+|        3 | SQL Server | SQL Server is ... | 2018-01-20 11:01:10 | GOD    | STUDENT |
+|        4 | PostgreSQL | PostgreSQL is ... | 2018-01-23 01:03:03 | KIMKIM | WORKER  |
++----------+------------+-------------------+---------------------+--------+---------+
+5 rows in set (0.00 sec)
+
 mysql>
