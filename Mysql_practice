@@ -755,3 +755,137 @@ mysql>
 mysql> SELECT * FROM A  WHERE OLD => 30;
 ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '=> 30' at line 1
 mysql>
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 14
+Server version: 5.7.31-log MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use notice;
+Database changed
+mysql> desc notice
+    -> ;
++-----------+-----------+------+-----+-------------------+-----------------------------+
+| Field     | Type      | Null | Key | Default           | Extra                       |
++-----------+-----------+------+-----+-------------------+-----------------------------+
+| ID        | int(5)    | YES  |     | NULL              |                             |
+| TITLE     | text      | YES  |     | NULL              |                             |
+| WRITER_ID | text      | YES  |     | NULL              |                             |
+| CONENT    | text      | YES  |     | NULL              |                             |
+| REGDATE   | timestamp | NO   |     | CURRENT_TIMESTAMP | on update CURRENT_TIMESTAMP |
+| HIT       | int(5)    | YES  |     | NULL              |                             |
+| FILES     | text      | YES  |     | NULL              |                             |
++-----------+-----------+------+-----+-------------------+-----------------------------+
+7 rows in set (0.00 sec)
+
+mysql> select * from notice;
++------+-------+-----------+--------+---------------------+------+-------+
+| ID   | TITLE | WRITER_ID | CONENT | REGDATE             | HIT  | FILES |
++------+-------+-----------+--------+---------------------+------+-------+
+|    1 | jdbc  | newlec    | aaa    | 2020-11-14 09:58:04 |    0 |       |
++------+-------+-----------+--------+---------------------+------+-------+
+1 row in set (0.00 sec)
+
+mysql>  alter table notice change conent content text;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> insert into notice values(2, 'jdbc2',  'newlec', 'bbb', current_timestamp ,0, "");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into notice values(3, 'jdbc3',  'newlec', 'ccc', current_timestamp ,0, "");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> update notice set hit = 10;
+Query OK, 3 rows affected (0.01 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+
+mysql> update notice set hit = 5 where title = 'jdbc3';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from notice;
++------+-------+-----------+---------+---------------------+------+-------+
+| ID   | TITLE | WRITER_ID | content | REGDATE             | HIT  | FILES |
++------+-------+-----------+---------+---------------------+------+-------+
+|    1 | jdbc  | newlec    | aaa     | 2020-11-14 13:46:43 |   10 |       |
+|    2 | jdbc2 | newlec    | bbb     | 2020-11-14 13:46:43 |   10 |       |
+|    3 | jdbc3 | newlec    | ccc     | 2020-11-14 13:47:12 |    5 |       |
+| NULL | TEST2 | newlec    | hahaha  | 2020-11-14 15:08:26 | NULL |       |
++------+-------+-----------+---------+---------------------+------+-------+
+4 rows in set (0.00 sec)
+
+mysql> update notice set id = 4 where title ='test2';
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from notice;
++------+-------+-----------+---------+---------------------+------+-------+
+| ID   | TITLE | WRITER_ID | content | REGDATE             | HIT  | FILES |
++------+-------+-----------+---------+---------------------+------+-------+
+|    1 | jdbc  | newlec    | aaa     | 2020-11-14 13:46:43 |   10 |       |
+|    2 | jdbc2 | newlec    | bbb     | 2020-11-14 13:46:43 |   10 |       |
+|    3 | jdbc3 | newlec    | ccc     | 2020-11-14 13:47:12 |    5 |       |
+|    4 | TEST2 | newlec    | hahaha  | 2020-11-14 15:10:59 | NULL |       |
++------+-------+-----------+---------+---------------------+------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select * from notice;
++------+-------+-----------+---------+---------------------+------+-------+
+| ID   | TITLE | WRITER_ID | content | REGDATE             | HIT  | FILES |
++------+-------+-----------+---------+---------------------+------+-------+
+|    1 | jdbc  | newlec    | aaa     | 2020-11-14 13:46:43 |   10 |       |
+|    2 | jdbc2 | newlec    | bbb     | 2020-11-14 13:46:43 |   10 |       |
+|    3 | jdbc3 | newlec    | ccc     | 2020-11-14 13:47:12 |    5 |       |
+|    4 | TEST3 | newlec    | hahaha3 | 2020-11-14 15:16:43 | NULL |       |
+| NULL | TEST2 | newlec    | hahaha  | 2020-11-14 15:16:23 | NULL |       |
++------+-------+-----------+---------+---------------------+------+-------+
+5 rows in set (0.00 sec)
+
+mysql> update notice set id = 5 where title ='test2';
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from notice;
++------+-------+-----------+---------+---------------------+------+-------+
+| ID   | TITLE | WRITER_ID | content | REGDATE             | HIT  | FILES |
++------+-------+-----------+---------+---------------------+------+-------+
+|    1 | jdbc  | newlec    | aaa     | 2020-11-14 13:46:43 |   10 |       |
+|    2 | jdbc2 | newlec    | bbb     | 2020-11-14 13:46:43 |   10 |       |
+|    3 | jdbc3 | newlec    | ccc     | 2020-11-14 13:47:12 |    5 |       |
+|    4 | TEST3 | newlec    | hahaha3 | 2020-11-14 15:16:43 | NULL |       |
+|    5 | TEST2 | newlec    | hahaha  | 2020-11-14 15:17:46 | NULL |       |
++------+-------+-----------+---------+---------------------+------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from notice;
++------+-------+-----------+---------+---------------------+------+-------+
+| ID   | TITLE | WRITER_ID | content | REGDATE             | HIT  | FILES |
++------+-------+-----------+---------+---------------------+------+-------+
+|    1 | jdbc  | newlec    | aaa     | 2020-11-14 13:46:43 |   10 |       |
+|    2 | jdbc2 | newlec    | bbb     | 2020-11-14 13:46:43 |   10 |       |
+|    3 | jdbc3 | newlec    | ccc     | 2020-11-14 13:47:12 |    5 |       |
+|    4 | TEST3 | newlec    | hahaha3 | 2020-11-14 15:16:43 | NULL |       |
+|    5 | TEST2 | newlec    | hahaha  | 2020-11-14 15:17:46 | NULL |       |
++------+-------+-----------+---------+---------------------+------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from notice;
++------+-------+-----------+---------+---------------------+------+-------+
+| ID   | TITLE | WRITER_ID | content | REGDATE             | HIT  | FILES |
++------+-------+-----------+---------+---------------------+------+-------+
+|    1 | jdbc  | newlec    | aaa     | 2020-11-14 13:46:43 |   10 |       |
+|    2 | jdbc2 | newlec    | bbb     | 2020-11-14 13:46:43 |   10 |       |
+|    3 | jdbc3 | newlec    | ccc     | 2020-11-14 13:47:12 |    5 |       |
+|    4 | TEST3 | newlec    | hahaha3 | 2020-11-14 15:16:43 | NULL |       |
++------+-------+-----------+---------+---------------------+------+-------+
+4 rows in set (0.00 sec)
+
+mysql>
