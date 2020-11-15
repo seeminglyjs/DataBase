@@ -889,3 +889,229 @@ mysql> select * from notice;
 4 rows in set (0.00 sec)
 
 mysql>
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 43
+Server version: 5.7.31-log MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use notice;
+Database changed
+mysql> show tables;
++------------------+
+| Tables_in_notice |
++------------------+
+| comment          |
+| member           |
+| member_role      |
+| notice           |
+| role             |
++------------------+
+5 rows in set (0.00 sec)
+
+mysql> desc notice;
++-----------+-----------+------+-----+-------------------+-----------------------------+
+| Field     | Type      | Null | Key | Default           | Extra                       |
++-----------+-----------+------+-----+-------------------+-----------------------------+
+| ID        | int(5)    | YES  |     | NULL              |                             |
+| TITLE     | text      | YES  |     | NULL              |                             |
+| WRITER_ID | text      | YES  |     | NULL              |                             |
+| content   | text      | YES  |     | NULL              |                             |
+| REGDATE   | timestamp | NO   |     | CURRENT_TIMESTAMP | on update CURRENT_TIMESTAMP |
+| HIT       | int(5)    | YES  |     | NULL              |                             |
+| FILES     | text      | YES  |     | NULL              |                             |
++-----------+-----------+------+-----+-------------------+-----------------------------+
+7 rows in set (0.00 sec)
+
+mysql> select rownum, notice. from notice;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from notice' at line 1
+mysql> select @rownum:=@rownum+1 as rownum,
+    -> dic.*
+    -> from notice dic
+    -> where (@rownum:=0)=0;
++--------+------+-------+-----------+---------+---------------------+------+-------+
+| rownum | ID   | TITLE | WRITER_ID | content | REGDATE             | HIT  | FILES |
++--------+------+-------+-----------+---------+---------------------+------+-------+
+|   NULL |    1 | jdbc  | newlec    | aaa     | 2020-11-14 13:46:43 |   10 |       |
+|   NULL |    2 | jdbc2 | newlec    | bbb     | 2020-11-14 13:46:43 |   10 |       |
+|   NULL |    3 | jdbc3 | newlec    | ccc     | 2020-11-14 13:47:12 |    5 |       |
+|   NULL |    4 | TEST3 | newlec    | hahaha3 | 2020-11-14 15:16:43 | NULL |       |
++--------+------+-------+-----------+---------+---------------------+------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select @rownum;
++---------+
+| @rownum |
++---------+
+|    NULL |
++---------+
+1 row in set (0.00 sec)
+
+mysql> select @rownum:=@rownum+1 as rownum,
+    -> dic.*
+    -> from notice dic,
+    -> (select @rownum :=0)tmp;
++--------+------+-------+-----------+---------+---------------------+------+-------+
+| rownum | ID   | TITLE | WRITER_ID | content | REGDATE             | HIT  | FILES |
++--------+------+-------+-----------+---------+---------------------+------+-------+
+|      1 |    1 | jdbc  | newlec    | aaa     | 2020-11-14 13:46:43 |   10 |       |
+|      2 |    2 | jdbc2 | newlec    | bbb     | 2020-11-14 13:46:43 |   10 |       |
+|      3 |    3 | jdbc3 | newlec    | ccc     | 2020-11-14 13:47:12 |    5 |       |
+|      4 |    4 | TEST3 | newlec    | hahaha3 | 2020-11-14 15:16:43 | NULL |       |
++--------+------+-------+-----------+---------+---------------------+------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select @rownum:=@rownum+1 as rownum,
+    -> dic.*
+    -> from notice dic
+    -> (select @rownum :=0)tmp;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(select @rownum :=0)tmp' at line 4
+mysql> select @rownum:=@rownum+1 as rownum,
+    ->     -> dic.*
+    ->     -> from notice dic,
+    -> select @rownum:=@rownum+1 as rownum,
+    ->
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> dic.*
+    -> from notice dic,
+select @rownum:=@rownum+1 as rownum,' at line 2
+mysql>  select @rownum:=@rownum+1 as rownum, dic.* from notice dic, (select @rownum :=0)tmp order by ergdate desc;
+ERROR 1054 (42S22): Unknown column 'ergdate' in 'order clause'
+mysql>  select @rownum:=@rownum+1 as rownum, dic.* from notice dic, (select @rownum :=0)tmp order by regdate desc;
++--------+------+-------+-----------+---------+---------------------+------+-------+
+| rownum | ID   | TITLE | WRITER_ID | content | REGDATE             | HIT  | FILES |
++--------+------+-------+-----------+---------+---------------------+------+-------+
+|      1 |    4 | TEST3 | newlec    | hahaha3 | 2020-11-14 15:16:43 | NULL |       |
+|      2 |    3 | jdbc3 | newlec    | ccc     | 2020-11-14 13:47:12 |    5 |       |
+|      3 |    1 | jdbc  | newlec    | aaa     | 2020-11-14 13:46:43 |   10 |       |
+|      4 |    2 | jdbc2 | newlec    | bbb     | 2020-11-14 13:46:43 |   10 |       |
++--------+------+-------+-----------+---------+---------------------+------+-------+
+4 rows in set (0.00 sec)
+
+mysql>  select @rownum:=@rownum+1 as rownum, dic.* from notice dic, (select @rownum :=0)tmp where @rownum between 1 and 10 order by regdate desc;
+Empty set (0.00 sec)
+
+mysql>  select @rownum:=@rownum+1 as rownum, dic.* from notice dic, (select @rownum :=0)tmp where @rownum between 1 and 10 order by regdate desc;
+Empty set (0.00 sec)
+
+mysql>  select @rownum:=@rownum+1 as rownum, dic.* from notice dic, (select @rownum :=0)tmp order by regdate desc;
++--------+------+-------+-----------+---------+---------------------+------+-------+
+| rownum | ID   | TITLE | WRITER_ID | content | REGDATE             | HIT  | FILES |
++--------+------+-------+-----------+---------+---------------------+------+-------+
+|      1 |    4 | TEST3 | newlec    | hahaha3 | 2020-11-14 15:16:43 | NULL |       |
+|      2 |    3 | jdbc3 | newlec    | ccc     | 2020-11-14 13:47:12 |    5 |       |
+|      3 |    1 | jdbc  | newlec    | aaa     | 2020-11-14 13:46:43 |   10 |       |
+|      4 |    2 | jdbc2 | newlec    | bbb     | 2020-11-14 13:46:43 |   10 |       |
++--------+------+-------+-----------+---------+---------------------+------+-------+
+4 rows in set (0.00 sec)
+
+mysql>  select @rownum:=@rownum+1 as rownum, dic.* from notice dic, (select @rownum :=0)tmp order by regdate desc;
++--------+------+-------+-----------+---------+---------------------+------+-------+
+| rownum | ID   | TITLE | WRITER_ID | content | REGDATE             | HIT  | FILES |
++--------+------+-------+-----------+---------+---------------------+------+-------+
+|      1 |    4 | TEST3 | newlec    | hahaha3 | 2020-11-14 15:16:43 | NULL |       |
+|      2 |    3 | jdbc3 | newlec    | ccc     | 2020-11-14 13:47:12 |    5 |       |
+|      3 |    1 | jdbc  | newlec    | aaa     | 2020-11-14 13:46:43 |   10 |       |
+|      4 |    2 | jdbc2 | newlec    | bbb     | 2020-11-14 13:46:43 |   10 |       |
++--------+------+-------+-----------+---------+---------------------+------+-------+
+4 rows in set (0.00 sec)
+
+mysql> insert into notice values (5, 'jdbc4', 'jss', 'ddd', current_timestamp, 5, '');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into notice values (6, 'jdbc5', 'gjss', 'ddd', current_timestamp, 5, '');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into notice values (7, 'jdbc7', 'gjss', 'ddd', current_timestamp, 5, '');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into notice values (7, 'jdbc7', 'gjss', 'ddd', current_timestamp, 5, '');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into notice values (8, 'jdbc8', 'gjss', 'ddd', current_timestamp, 5, '');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into notice values (9, 'jdbc9', 'jjgjss', 'ddd', current_timestamp, 5, '');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into notice values (10, 'jdbc10', 'jjgjss', 'ddd', current_timestamp, 5, '');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into notice values (11, 'jdbc11', 'jjgjss', 'ddd', current_timestamp, 5, '');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select @rownum:=@rownum+1 as rownum, dic.* from notice dic, (select @rownum :=0)tmp where @rownum between 1 and 10 order by regdate desc;
+Empty set (0.00 sec)
+
+mysql> select @rownum:=@rownum+1 as rownum, dic.* from notice dic, (select @rownum :=0)tmp order by regdate desc limit10;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'limit10' at line 1
+mysql> select @rownum:=@rownum+1 as rownum, dic.* from notice dic, (select @rownum :=0)tmp order by regdate desc limit 10;
++--------+------+--------+-----------+---------+---------------------+------+-------+
+| rownum | ID   | TITLE  | WRITER_ID | content | REGDATE             | HIT  | FILES |
++--------+------+--------+-----------+---------+---------------------+------+-------+
+|      1 |   11 | jdbc11 | jjgjss    | ddd     | 2020-11-15 16:28:33 |    5 |       |
+|      2 |   10 | jdbc10 | jjgjss    | ddd     | 2020-11-15 16:28:25 |    5 |       |
+|      3 |    9 | jdbc9  | jjgjss    | ddd     | 2020-11-15 16:28:18 |    5 |       |
+|      4 |    8 | jdbc8  | gjss      | ddd     | 2020-11-15 16:28:07 |    5 |       |
+|      5 |    7 | jdbc7  | gjss      | ddd     | 2020-11-15 16:27:58 |    5 |       |
+|      6 |    7 | jdbc7  | gjss      | ddd     | 2020-11-15 16:27:54 |    5 |       |
+|      7 |    6 | jdbc5  | gjss      | ddd     | 2020-11-15 16:27:41 |    5 |       |
+|      8 |    5 | jdbc4  | jss       | ddd     | 2020-11-15 16:27:29 |    5 |       |
+|      9 |    4 | TEST3  | newlec    | hahaha3 | 2020-11-14 15:16:43 | NULL |       |
+|     10 |    3 | jdbc3  | newlec    | ccc     | 2020-11-14 13:47:12 |    5 |       |
++--------+------+--------+-----------+---------+---------------------+------+-------+
+10 rows in set (0.00 sec)
+
+mysql> insert into notice values (12, 'jdbc11', 'jjgjss', 'ddd', current_timestamp, 5, '');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into notice values (13, 'jdbc13', 'jjgjss', 'ddd', current_timestamp, 5, '');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select @rownum:=@rownum+1 as rownum, dic.* from notice dic, (select @rownum :=0)tmp order by regdate desc limit 10;
++--------+------+--------+-----------+---------+---------------------+------+-------+
+| rownum | ID   | TITLE  | WRITER_ID | content | REGDATE             | HIT  | FILES |
++--------+------+--------+-----------+---------+---------------------+------+-------+
+|      1 |   13 | jdbc13 | jjgjss    | ddd     | 2020-11-15 16:36:58 |    5 |       |
+|      2 |   12 | jdbc11 | jjgjss    | ddd     | 2020-11-15 16:36:51 |    5 |       |
+|      3 |   11 | jdbc11 | jjgjss    | ddd     | 2020-11-15 16:28:33 |    5 |       |
+|      4 |   10 | jdbc10 | jjgjss    | ddd     | 2020-11-15 16:28:25 |    5 |       |
+|      5 |    9 | jdbc9  | jjgjss    | ddd     | 2020-11-15 16:28:18 |    5 |       |
+|      6 |    8 | jdbc8  | gjss      | ddd     | 2020-11-15 16:28:07 |    5 |       |
+|      7 |    7 | jdbc7  | gjss      | ddd     | 2020-11-15 16:27:58 |    5 |       |
+|      8 |    7 | jdbc7  | gjss      | ddd     | 2020-11-15 16:27:54 |    5 |       |
+|      9 |    6 | jdbc5  | gjss      | ddd     | 2020-11-15 16:27:41 |    5 |       |
+|     10 |    5 | jdbc4  | jss       | ddd     | 2020-11-15 16:27:29 |    5 |       |
++--------+------+--------+-----------+---------+---------------------+------+-------+
+10 rows in set (0.00 sec)
+
+mysql> create view NOTICE_VIEW (select @rownum:=@rownum+1 as rownum, dic.* from notice dic, (select @rownum :=0)tmp order by regdate desc);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'select @rownum:=@rownum+1 as rownum, dic.* from notice dic, (select @rownum :=0)' at line 1
+mysql> create view NOTICE_VIEW as (select @rownum:=@rownum+1 as rownum, dic.* from notice dic, (select @rownum :=0)tmp order by regdate desc);
+ERROR 1351 (HY000): View's SELECT contains a variable or parameter
+mysql> create view NOTICE_VIEW as select @rownum:=@rownum+1 as rownum, dic.* from notice dic, (select @rownum :=0)tmp order by regdate desc;
+ERROR 1351 (HY000): View's SELECT contains a variable or parameter
+mysql> select count(ID) from NOTICE;
++-----------+
+| count(ID) |
++-----------+
+|        14 |
++-----------+
+1 row in set (0.01 sec)
+
+mysql>  select count(ID) as COUNT from NOTICE;
++-------+
+| COUNT |
++-------+
+|    14 |
++-------+
+1 row in set (0.00 sec)
+
+mysql>
