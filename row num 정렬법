@@ -1,0 +1,208 @@
+MySQL ROW_NUMBER ORDER  BY 정렬한 후 번호 매기기
+
+ 
+
+아..오라클은 ROW_NUMBER() OVER (PARTITION BY ...ORDER BY) 로 정렬한 후 번호 매기기가  매우 쉽다.
+
+하지만 우리의 MySql 은 그러한 함수가 없다.
+
+ 
+
+그렇지만 MySql은 쿼리문에서 변수를 사용할 수 있는 막강한 기능이 있다.
+
+변수를 이용하여 order by 한 쿼리에 rownumber 를 구하는 방법에 대해 알아보자.
+
+ 
+
+우선 감을 잡기 위해 제일 기본이 되는 쿼리문 부터 보겠다.
+
+기본 SELECT 문이다.
+
+ 
+
+SELECT  T1.GG4ID AS GG4ID
+      , T1 .BASIC_DAY AS DAY
+      , T1 .BASIC_HOUR AS HOUR
+      , T1 .BASIC_MIN AS MIN
+      , T1 .VOLUME AS VOLUME
+ FROM MART_GUGAN4_STAT_15MIN T1
+  WHERE BASIC_DAY = '20151201'
+  ORDER BY GG4ID, HOUR, MIN
+
+ 
+
+결과는 아래와 같다.
+
+ 
+
+
+
+ 
+
+정말 말그대로 조건에 맞게 SELECT 해온 결과 이다.
+
+ 
+
+이제 이 쿼리문에 ROWNUMBER를 매겨보자.
+
+딱 2가지만 추가해 주면 된다.
+
+ 
+
+SELECT  T1.GG4ID AS GG4ID
+      , T1 .BASIC_DAY AS DAY
+      , T1 .BASIC_HOUR AS HOUR
+      , T1 .BASIC_MIN AS MIN
+      , T1 .VOLUME AS VOLUME
+      , @rownum := @rownum+1 AS RNUM
+ FROM MART_GUGAN4_STAT_15MIN T1, (SELECT @rownum :=0) AS R
+  WHERE BASIC_DAY = '20151201'
+  ORDER BY GG4ID, HOUR, MIN
+
+ 
+
+@rownum이라는 변수를 사용했다.
+
+(SELECT @rownum :=0) AS R 는 @rownum을 0으로 초기화해 SELECT 하겠다 이다.
+
+그리고 @rownum := @rownum+1 AS RNUM 은 행을 불러올때마다 1을 더해서 출력하겠다 이다.
+
+ 
+
+말그대로 변수를 선언하고 변수에 1씩을 더해 행에 가져오는 것이다.
+
+
+
+
+
+ 
+
+ 
+
+결과는 위와 같이 출력된다.
+
+ 
+
+그럼 여기서 한발짝 더 나아가 보자. 요즘 JOIN 없이 SELECT 하는게 있을까 싶어..
+
+JOIN을 사용해 보자.
+
+ 
+
+SELECT T2 .GG4_NAME AS GUGANNAME
+        , T2 .GG4_DIRECTION AS DIRECTION
+        , T1 .BASIC_DAY AS DAY
+        , T1 .BASIC_HOUR AS HOUR
+        , T1 .BASIC_MIN AS MIN
+        , T1 .VOLUME AS VOLUME
+ FROM MART_GUGAN4_STAT_15MIN T1
+ LEFT JOIN MART_GUGAN4 T2 ON (T2 .GG4ID = T1. GG4ID)
+  WHERE BASIC_DAY = '20151201'
+      AND GG4_NAME LIKE '%'
+ ORDER BY GUGANNAME, DIRECTION, HOUR, MIN
+
+ 
+
+첫번째 쿼리문에  JOIN을 사용해 값을 더 가져오고 조건도 더 추가 했다.
+
+여기에 ROWNUMBER을 매겨보자. 두가지만 추가 하면 되니깐...간단하겠지...
+
+ 
+
+생각하여
+
+ 
+
+ 
+
+ 
+
+SELECT T2 .GG4_NAME AS GUGANNAME
+         , T2 .GG4_DIRECTION AS DIRECTION
+         , T1 .BASIC_DAY AS DAY
+         , T1 .BASIC_HOUR AS HOUR
+         , T1 .BASIC_MIN AS MIN
+         , T1 .VOLUME AS VOLUME
+         , @rownum := @rownum+1 AS RNUM
+ FROM MART_GUGAN4_STAT_15MIN T1, (SELECT @rownum := 0) AS R
+  LEFT JOIN MART_GUGAN4 T2 ON (T2 .GG4ID = T1. GG4ID)
+ WHERE BASIC_DAY = '20151201'
+     AND GG4_NAME LIKE '%'
+ ORDER BY GUGANNAME, DIRECTION, HOUR, MIN
+
+SELECT T2 .GG4_NAME AS GUGANNAME
+         , T2 .GG4_DIRECTION AS DIRECTION
+         , T1 .BASIC_DAY AS DAY
+         , T1 .BASIC_HOUR AS HOUR
+         , T1 .BASIC_MIN AS MIN
+         , T1 .VOLUME AS VOLUME
+         , @rownum := @rownum+1 AS RNUM
+ FROM MART_GUGAN4_STAT_15MIN T1
+ LEFT JOIN MART_GUGAN4 T2 ON (T2 .GG4ID = T1. GG4ID)
+ , (SELECT @rownum := 0) AS R
+  WHERE BASIC_DAY = '20151201'
+     AND GG4_NAME LIKE '%'
+  ORDER BY GUGANNAME, DIRECTION, HOUR, MIN
+
+
+꼬였다.. 조인을 하는 시점에서 @rownum이 잘못 더해지고 있었다.
+
+이런 문제를 해결하는 방법은 서브쿼리를 사용하여 @rownum이 더해지는 시점을 바꾸는 것이다.
+
+ 
+
+SELECT A.*
+        , @rownum := @rownum+1 AS RNUM
+  FROM (
+          SELECT T2 .GG4_NAME AS GUGANNAME
+                  , T2 .GG4_DIRECTION AS DIRECTION
+                  , T1 .BASIC_DAY AS DAY
+                  , T1 .BASIC_HOUR AS HOUR
+                  , T1 .BASIC_MIN AS MIN
+                  , T1 .VOLUME AS VOLUME
+            FROM MART_GUGAN4_STAT_15MIN T1
+            LEFT JOIN MART_GUGAN4 T2 ON (T2 .GG4ID = T1. GG4ID)
+            JOIN (SELECT @rownum := 0) AS R
+          WHERE BASIC_DAY = '20151201'
+              AND GG4_NAME LIKE '%'
+          ORDER BY GUGANNAME, DIRECTION, HOUR, MIN) AS A
+
+ 
+
+참고) JOIN (SELECT @rownum := 0) AS R 과 ,(SELECT @rownum := 0) AS R 은 같다. 표현방식이 다를뿐이다.
+
+ 
+
+간단하다. 데이터를 만든 시점에서 @rownum을 더하느냐 만들면서 더하느냐의 차이다
+
+결과를 보면 원하는데로. order by 되고 조건에 맞는 값을 가져온 후에 @rownum을 구한다.
+
+ 
+
+ 
+
+
+
+ 
+
+여기서 RNUM을 컨트롤 하기 위해선 한번더 서브쿼리를 써주면 된다..
+
+ 
+
+SELECT *
+ FROM ( SELECT A.*
+                    , @rownum := @rownum + 1 AS RNUM
+             FROM (
+                      SELECT T2 .GG4_NAME AS GUGANNAME
+                              , T2 .GG4_DIRECTION AS DIRECTION
+                              , T1 .BASIC_DAY AS DAY
+                              , T1 .BASIC_HOUR AS HOUR
+                              , T1 .BASIC_MIN AS MIN
+                              , T1 .VOLUME AS VOLUME
+                       FROM MART_GUGAN4_STAT_15MIN T1
+                       LEFT JOIN MART_GUGAN4 T2 ON (T2 .GG4ID = T1. GG4ID)
+                       JOIN ( SELECT @rownum := 0) R
+                      WHERE BASIC_DAY = '20151201'
+                         AND GG4_NAME LIKE '%') AS A
+                   ORDER BY A.GUGANNAME, A.DIRECTION, A.HOUR, A.MIN) AS B
+  WHERE RNUM BETWEEN 1 AND 10
